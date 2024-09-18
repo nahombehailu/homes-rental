@@ -8,7 +8,9 @@ import cors from 'cors';
 import { fileURLToPath } from 'url';
 
 // Import routes
-import userRoutes from './routes/user.js';
+import userRoutes from './routes/userRoute.js';
+// import listingRoutes from './routes/listingRoutes.js';
+
 
 // Get __dirname equivalent in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -30,6 +32,7 @@ mongodbConnection();
 
 // Routes
 app.use('/api/users', userRoutes);
+// app.use('/api/listing', listingRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

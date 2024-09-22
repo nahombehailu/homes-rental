@@ -23,3 +23,4 @@ const uploadSingle = multer({ storage }).single('profileImage');
 const uploadMultiple = multer({ storage }).array('listingImage');
 
 export { uploadSingle, uploadMultiple };
+

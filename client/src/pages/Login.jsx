@@ -9,7 +9,9 @@ import {
 } from '@mui/material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setLogin } from '../redux/auth'; // Adjust path if needed
 
 export default function Login() {
     const [loginData, setLoginData] = useState({
@@ -18,6 +20,7 @@ export default function Login() {
     });
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,34 +38,29 @@ export default function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-
         try {
-            const res = await fetch("http://localhost:4000/api/users/login", {
-                method: "POST",
+            const res = await fetch('http://localhost:4000/api/users/login', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json"
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(loginData)
+                body: JSON.stringify(loginData),
             });
 
-            if (!res.ok) {
-                const errorData = await res.json();
-                if (errorData.message === 'User not found') {
-                    showToast('User not found. Please register.', 'error');
-                    navigate('/register');
-                } else {
-                    throw new Error(errorData.message || 'Login failed');
-                }
+            if (res.ok) {
+                const data = await res.json();
+                // Dispatch the setLogin action with the correct structure
+                dispatch(setLogin({ user: data.user, token: data.token }));
+                showToast("Successfully logged in", 'success');
+                navigate('/');
+            } else {
+                showToast("Login failed", 'error');
             }
-
-            const data = await res.json();
-            console.log('Login successful:', data);
-            showToast('Login successful!', 'success');
-            navigate('/dashboard');
         } catch (error) {
-            showToast(error.message, 'error');
+            console.error('Error occurred during login:', error);
+            showToast("An error occurred", 'error');
         } finally {
-            setLoading(false);
+            setLoading(false); // Ensure loading state is reset in both success and error cases
         }
     };
 

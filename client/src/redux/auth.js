@@ -11,7 +11,7 @@ export const userSlice = createSlice({
     reducers: {
         setLogin: (state, action) => {
             state.user = action.payload.user;
-            state.token = action.payload.token; // Fixed typo: 'toke' -> 'token'
+            state.token = action.payload.token; // Ensure this is correctly set
         },
         setLogout: (state) => {
             state.user = null;
